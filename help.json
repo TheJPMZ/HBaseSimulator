@@ -62,5 +62,9 @@
   "count": {
     "desc": "Count the number of rows in a table",
     "args": "<table name>"
+  },
+  "exit": {
+    "desc": "Exit the shell",
+    "args": ""
   }
 }

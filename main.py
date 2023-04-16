@@ -75,6 +75,19 @@ def is_enabled(table_name):
     print("Table is enabled")
     return True
 
+def describe(table_name):
+    if not (memes := i_get_table(table_name)):
+        return
+
+    dic, file_path = memes
+
+    print("Table: " + table_name)
+    print("Status: " + dic["info"]["_status"])
+    print("Columns:")
+    for key, value in dic["info"].items():
+        if key != "_status":
+            print(f"\t{key} => {value}".replace(":", "->"))
+
 
 all_helps = json.load(open("help.json", "r"))
 list_of_commands = list(all_helps.keys())
@@ -84,6 +97,7 @@ command_dict = {
     "disable": disable,
     "enable": enable,
     "is_enabled": is_enabled,
+    "describe": describe,
 
     # Para agregar una funcion solamente se agrega el nombre de la funcion y el nombre del comando
 }
@@ -104,10 +118,10 @@ def show_help(command=None):
 
 
 def main():
-    print("Welcome to HBase Simulator")
+    print("==== Welcome to HBase Simulator ====")
     print("Type 'help or ?' for a list of commands")
     print("To get more information about a command, type '<command>?'")
-    print("To exit, type 'exit' or 'quit'")
+    print("To exit, type 'exit' or press Ctrl+C")
 
     running = True
     while running:
@@ -118,9 +132,9 @@ def main():
 
         command, *args = command_list
 
-        if command == "help" or command == "?":
+        if command in "help?":
             show_help()
-        elif command == "exit" or command == "quit":
+        elif command == "exit":
             running = False
         elif command[-1] == "?":
             if command[:-1] in list_of_commands:
