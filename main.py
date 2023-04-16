@@ -40,20 +40,21 @@ def main():
 
         if command == "help" or command == "?":
             show_help()
-        if command == "exit" or command == "quit":
+        elif command == "exit" or command == "quit":
             running = False
-        if command[-1] == "?":
+        elif command[-1] == "?":
             if command[:-1] in list_of_commands:
                 show_help(command[:-1])
             else:
                 print("Command not found")
+        elif command in list_of_commands:
+            print("Command found")
+
+            
 
 
-
-
-
-
-
+        else:
+            print("Command not found, type 'help' for a list of commands")
 
 if __name__ == "__main__":
     main()
