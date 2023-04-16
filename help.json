@@ -1,0 +1,66 @@
+{
+  "create": {
+    "desc": "Create a new table with the specified name and column families",
+    "args": "<table name>, <column family1>, <column family2>, ..."
+  },
+  "put": {
+    "desc": "Insert or update a row in a table with the specified row key, column family, column name, and value",
+    "args": "<table name>, <row key>, <column family:column name>, <value>"
+  },
+  "get": {
+    "desc": "Retrieve the value of a specific column from a row in a table with the specified row key",
+    "args": "<table name>, <row key>"
+  },
+  "scan": {
+    "desc": "Scan a table and retrieve all rows and columns",
+    "args": "<table name>"
+  },
+  "delete": {
+    "desc": "Delete a specific version of a column in a row in a table with the specified row key",
+    "args": "<table name>, <row key>, <column family:column name>, <timestamp>"
+  },
+  "deleteall": {
+    "desc": "Delete all versions of a row in a table with the specified row key",
+    "args": "<table name>, <row key>"
+  },
+  "drop": {
+    "desc": "Drop a table and permanently delete all data in the table",
+    "args": "<table name>"
+  },
+  "dropall": {
+    "desc": "Disable and drop all tables in HBase",
+    "args": ""
+  },
+  "disable": {
+    "desc": "Disable a table and prevent any further operations on it",
+    "args": "<table name>"
+  },
+  "enable": {
+    "desc": "Enable a table that has been disabled",
+    "args": "<table name>"
+  },
+  "is_enabled": {
+    "desc": "Check if a table is enabled or disabled",
+    "args": "<table name>"
+  },
+  "list": {
+    "desc": "List all tables in HBase",
+    "args": ""
+  },
+  "alter": {
+    "desc": "Modify the schema of a table, such as adding or removing column families or changing attributes of column families",
+    "args": "<table_name>, {NAME => <column_family_name>, <attribute_name> => <attribute_value>}"
+  },
+  "describe": {
+    "desc": "Describe the schema of a table, including its column families and attributes",
+    "args": "<table name>"
+  },
+  "truncate": {
+    "desc": "Delete all data in a table, but keep the table and its schema intact",
+    "args": "<table name>"
+  },
+  "count": {
+    "desc": "Count the number of rows in a table",
+    "args": "<table name>"
+  }
+}
