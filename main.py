@@ -6,13 +6,41 @@ import os
 import json
 
 
+def i_get_table(table_name):
+    file_path = os.path.join("database", table_name + ".json")
+
+    try:
+        with open(file_path, "r") as file:
+            dic = json.load(file)
+    except FileNotFoundError:
+        print("Table not found, use 'list' to see the list of tables")
+        return False
+
+    return dic, file_path
+
+
+def i_toggle(table_name, status):
+    if not (memes := i_get_table(table_name)):
+        return
+
+    dic, file_path = memes
+
+    if dic["info"]["_status"] == status:
+        print(f"Table already {status}")
+    else:
+        dic["info"]["_status"] = status
+        with open(file_path, "w") as file:
+            json.dump(dic, file)
+        print(f"Table {table_name} {status}")
+
+
 def listing():
     print("List of tables:")
     for filename in os.listdir("database"):
         print(f"- {filename[:-5]}")
 
-def create(table_name, *args):
 
+def create(table_name, *args):
     dic = {
         "info": {"_status": "enabled"},
         "data": {}
@@ -26,11 +54,38 @@ def create(table_name, *args):
     with open(file_path, "w") as file:
         json.dump(dic, file)
 
+
+def disable(table_name):
+    i_toggle(table_name, "disabled")
+
+
+def enable(table_name):
+    i_toggle(table_name, "enabled")
+
+
+def is_enabled(table_name):
+    if not (memes := i_get_table(table_name)):
+        return
+
+    dic, file_path = memes
+
+    if dic["info"]["_status"] == "disabled":
+        print("Table is disabled")
+        return False
+    print("Table is enabled")
+    return True
+
+
 all_helps = json.load(open("help.json", "r"))
 list_of_commands = list(all_helps.keys())
 command_dict = {
     "create": create,
     "list": listing,
+    "disable": disable,
+    "enable": enable,
+    "is_enabled": is_enabled,
+
+    # Para agregar una funcion solamente se agrega el nombre de la funcion y el nombre del comando
 }
 
 
@@ -48,11 +103,7 @@ def show_help(command=None):
     print("--------------------")
 
 
-
-
-
 def main():
-
     print("Welcome to HBase Simulator")
     print("Type 'help or ?' for a list of commands")
     print("To get more information about a command, type '<command>?'")
@@ -77,13 +128,13 @@ def main():
             else:
                 print("Command not found")
         elif command in list_of_commands:
-            command_dict[command](*args)
-
-
-
-
+            try:
+                command_dict[command](*args)
+            except TypeError:
+                print(f"Invalid arguments, type '{command}?' for more information ")
         else:
             print("Command not found, type 'help' for a list of commands")
+
 
 if __name__ == "__main__":
     main()
