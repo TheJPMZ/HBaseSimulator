@@ -1,6 +1,6 @@
 """
 This is a simulator for HBase.
-Made by: Cayetano Molina 20211, Jose Monzon 20309, Mario de Leon TODO
+Made by: Cayetano Molina 20211, Jose Monzon 20309, Mario de Leon 19019
 """
 import os
 import json
@@ -214,7 +214,80 @@ def describe(table_name):
     for key, value in dic["info"].items():
         if key != "_status":
             print(f"\t{key} => {value}".replace(":", "->"))
+            
+def scan(table_name):
+    if not (memes := i_get_table(table_name)):
+        return
 
+    dic, file_path = memes
+
+    print(f"All rows in table {table_name}:")
+    for row_key in dic["data"].keys():
+        row = dic["data"][row_key]
+        print(f"Row: {row_key}")
+        for column_key in row.keys():
+            print(f"\tColumn: {column_key} => Value: {row[column_key]}")
+
+def count(table_name):
+    if not (memes := i_get_table(table_name)):
+        return
+    dic, file_path = memes
+    count = len(dic["data"])
+    print(f"Table {table_name} has {count} rows")
+
+
+def truncate(table_name):
+    if not (memes := i_get_table(table_name)):
+        return
+    dic, file_path = memes
+    dic["data"] = {}
+    with open(file_path, "w") as file:
+        json.dump(dic, file)
+    print(f"{table_name} has been truncated.")
+
+
+# delete <table_name> <Geoffrey> <personal>
+def delete(table_name, *args):
+    num_args = len(args)
+    if num_args != 2:
+        print("Invalid arguments. Usage: delete <table_name> <row_key> <column>")
+    else:
+        if not (memes := i_get_table(table_name)):
+            return
+        dic, file_path = memes
+        row_key = args[0]
+        column_cell = args[1:]
+        if row_key not in dic["data"]:
+            print("Row key not found")
+            return
+        for cell in column_cell:
+            if cell not in dic["data"][row_key]:
+                print("Column cell not found")
+                return
+        for cell in column_cell:
+            del dic["data"][row_key][cell]
+        with open(file_path, "w") as file:
+            json.dump(dic, file)
+            print("Deleted successfully")
+
+
+# deleteall <table_name> <Geoffrey>
+def deleteall(*args):
+    if len(args) != 2:
+        print("Invalid arguments. Usage: deleteall <table_name> <row_key>")
+    else:
+        table_name, row_key = args[:2]
+        if not (memes := i_get_table(table_name)):
+            return
+        dic, file_path = memes
+        if row_key not in dic["data"]:
+            print(f"Row key '{row_key}' not found in table '{table_name}'")
+            return
+        del dic["data"][row_key]
+        with open(file_path, "w") as file:
+            json.dump(dic, file)
+        print(
+            f"All cells in row '{row_key}' of table '{table_name}' have been deleted.")
 
 all_helps = json.load(open("help.json", "r"))
 list_of_commands = list(all_helps.keys())
@@ -228,8 +301,13 @@ command_dict = {
     "drop": drop,
     "dropall": dropall,
     "get": get,
-    "put": put, 
-    "alter": alter
+    "put": put,
+    "alter": alter,
+    "delete": delete,
+    "deleteall": deleteall,
+    "scan": scan,
+    "count": count,
+    "truncate": truncate
 
     # Para agregar una funcion solamente se agrega el nombre de la funcion y el nombre del comando
 }
