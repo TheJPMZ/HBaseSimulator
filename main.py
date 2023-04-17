@@ -7,7 +7,7 @@ import json
 import re
 import datetime
 import calendar
-
+import tempfile
 
 
 def i_get_table(table_name):
@@ -235,16 +235,29 @@ def count(table_name):
     count = len(dic["data"])
     print(f"Table {table_name} has {count} rows")
 
-
 def truncate(table_name):
     if not (memes := i_get_table(table_name)):
         return
     dic, file_path = memes
-    dic["data"] = {}
+    with open(file_path, "r") as file:
+        table_data = json.load(file)
+    # Temp file
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
+        json.dump(table_data, temp_file)
+        temp_file.flush()
+        temp_file_path = temp_file.name
+    # Delete table json
+    os.remove(file_path)
+    # Recreate table
+    create(table_name, *dic["info"].keys())
+    # Copy the data back from the temp file
+    with open(temp_file_path, "r") as temp_file:
+        temp_data = json.load(temp_file)
     with open(file_path, "w") as file:
-        json.dump(dic, file)
+        json.dump(temp_data, file)
+    # Delete temp file
+    os.remove(temp_file_path)
     print(f"{table_name} has been truncated.")
-
 
 # delete <table_name> <Geoffrey> <personal>
 def delete(table_name, *args):
