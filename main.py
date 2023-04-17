@@ -247,9 +247,11 @@ def truncate(table_name):
         temp_file.flush()
         temp_file_path = temp_file.name
     # Delete table json
+    new_table_name = table_name
+    disable(table_name)
     os.remove(file_path)
     # Recreate table
-    create(table_name, *dic["info"].keys())
+    create(new_table_name, *dic["info"].keys())
     # Copy the data back from the temp file
     with open(temp_file_path, "r") as temp_file:
         temp_data = json.load(temp_file)
