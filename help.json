@@ -59,8 +59,16 @@
     "desc": "Delete all data in a table, but keep the table and its schema intact",
     "args": "<table name>"
   },
+  "retruncate": {
+    "desc": "Delete all data in a table, create new table, copy information from previous table to new table",
+    "args": "<table name>"
+  },
   "count": {
     "desc": "Count the number of rows in a table",
+    "args": "<table name>"
+  },
+  "domany":{
+    "desc": "Insert or update many in one table",
     "args": "<table name>"
   },
   "exit": {

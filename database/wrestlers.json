@@ -2,63 +2,191 @@
   "info": {
     "personal": {
       "VERSIONS": 2
-      },
+    },
     "professional": {
-        "VERSIONS": 3
-      },
+      "VERSIONS": 3
+    },
     "_status": "enabled"
   },
   "data": {
     "RR": {
       "personal": {
-        "age": [[37, 1681614943],[36, 1681614942]],
-        "name": [["Leati Joseph «Joe» Anoa'i", 1681614942]]
+        "age": [
+          [
+            37,
+            1681614943
+          ],
+          [
+            36,
+            1681614942
+          ]
+        ],
+        "name": [
+          [
+            "Leati Joseph \u00c2\u00abJoe\u00c2\u00bb Anoa'i",
+            1681614942
+          ]
+        ]
       },
       "professional": {
-        "brand": [["SmackDown", 1681614942]],
-        "title": [["Undisputed WWE Universal Championship", 1681614942], ["WWE Universal Championship", 1681614000]],
-        "name" : [["Roman Reigns", 1681614942]]
+        "brand": [
+          [
+            "SmackDown",
+            1681614942
+          ]
+        ],
+        "title": [
+          [
+            "Undisputed WWE Universal Championship",
+            1681614942
+          ],
+          [
+            "WWE Universal Championship",
+            1681614000
+          ]
+        ],
+        "name": [
+          [
+            "Roman Reigns",
+            1681614942
+          ]
+        ]
       }
     },
     "SR": {
       "personal": {
-        "age": [[36, 1681614943]],
-        "name": [["Colby Daniel López", 1681614942]]
+        "age": [
+          [
+            36,
+            1681614943
+          ]
+        ],
+        "name": [
+          [
+            "Colby Daniel L\u00c3\u00b3pez",
+            1681614942
+          ]
+        ]
       },
       "professional": {
-        "brand": [["Raw", 1681614942]],
-        "name" : [["Seth Rollins", 1681614942]]
+        "brand": [
+          [
+            "Raw",
+            1681614942
+          ]
+        ],
+        "name": [
+          [
+            "Seth Rollins",
+            1681614942
+          ]
+        ]
       }
     },
     "MMY": {
       "personal": {
-        "age": [[36, 1681614943]],
-        "name": [["Demi Bennett", 1681614942]]
+        "age": [
+          [
+            36,
+            1681614943
+          ]
+        ],
+        "name": [
+          [
+            "Demi Bennett",
+            1681614942
+          ]
+        ]
       },
       "professional": {
-        "brand": [["SmackDown", 1681614942]],
-        "title": [["Smackdown Women's Champion", 1681614942]],
-        "name" : [["Rhea Ripley", 1681614942]]
+        "brand": [
+          [
+            "SmackDown",
+            1681614942
+          ]
+        ],
+        "title": [
+          [
+            "Smackdown Women's Champion",
+            1681614942
+          ]
+        ],
+        "name": [
+          [
+            "Rhea Ripley",
+            1681614942
+          ]
+        ]
       }
     },
     "LIV": {
       "personal": {
-        "age": [[28, 1681614943]],
-        "name": [["Gionna Jene Daddio", 1681614942]]
+        "age": [
+          [
+            28,
+            1681614943
+          ]
+        ],
+        "name": [
+          [
+            "Gionna Jene Daddio",
+            1681614942
+          ]
+        ]
       },
       "professional": {
-        "brand": [["Raw", 1681614942]],
-        "name" : [["Liv Morgan", 1681614942]]
+        "brand": [
+          [
+            "Raw",
+            1681614942
+          ]
+        ],
+        "name": [
+          [
+            "Liv Morgan",
+            1681614942
+          ]
+        ]
       }
     },
     "DM": {
       "personal": {
-        "age": [[37, 1681614943]],
-        "name": [["Drew McIntyre", 1681614942]]
+        "age": [
+          [
+            37,
+            1681614943
+          ]
+        ],
+        "name": [
+          [
+            "Drew McIntyre",
+            1681614942
+          ]
+        ]
       },
       "professional": {
-        "brand": [["SmackDown", 1681614942]],
-        "name" : [["Drew McIntyre", 1681614942]]
+        "brand": [
+          [
+            "SmackDown",
+            1681614942
+          ]
+        ],
+        "name": [
+          [
+            "Drew McIntyre",
+            1681614942
+          ]
+        ]
+      }
+    },
+    "Jorge": {
+      "personal": {
+        "age": [
+          [
+            35.0,
+            1681780667
+          ]
+        ]
       }
     }
   }

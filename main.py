@@ -24,6 +24,7 @@ def i_get_table(table_name):
 
     return dic, file_path
 
+    
 
 def i_toggle(table_name, status):
     if not (memes := i_get_table(table_name)):
@@ -36,7 +37,7 @@ def i_toggle(table_name, status):
     else:
         dic["info"]["_status"] = status
         with open(file_path, "w") as file:
-            json.dump(dic, file)
+            json.dump(dic, file, indent=2)
         print(f"Table {table_name} {status}")
 
 
@@ -61,6 +62,7 @@ def create(table_name, *args):
         json.dump(dic, file)
 
 def drop(table_name):
+    
     tables = os.listdir("database")
     if table_name+".json" in tables:
         if is_enabled(table_name):
@@ -71,7 +73,8 @@ def drop(table_name):
         print(f"{table_name} was not found")
         
 def dropall(regex):
-    print(regex)
+    
+    
     tables = os.listdir("database")
     if regex:
         r = re.compile(regex)
@@ -108,6 +111,10 @@ def get(table_name, *args):
     if not (file_info := i_get_table(table_name)):
         return
     
+    if is_enabled(table_name)==False:
+        print(f"- {table_name} is disabled, no actions allowed on this table")
+        return
+    
     dic = file_info[0]
     data = dic["data"]
     if row_name in data.keys():
@@ -123,7 +130,12 @@ def get(table_name, *args):
     print(" ")
 
 def put(table_name, *args):
-
+    
+ 
+    print(f"put {table_name}, {args}")
+    if len(args)!= 3:
+        print(f"Invalid arguments")
+        return   
     row, column, value = args
     col_fam = column.split(":")[0]
     col = column.split(":")[1]
@@ -136,27 +148,34 @@ def put(table_name, *args):
     except:
         value = value
 
+        
+
     
     if not (file_info := i_get_table(table_name)):
+        return
+    
+    if is_enabled(table_name)==False:
+        print(f"- {table_name} is disabled, no actions allowed on this table")
         return
 
     dic, file_path = file_info
     data=dic["data"]
     info = dic["info"]
     
-    col_fam_versions = dic["info"][col_fam]["VERSIONS"]
     
         
 
     
     if row in data.keys():
         if col_fam in data[row].keys():
+            col_fam_versions = dic["info"][col_fam]["VERSIONS"]
+
             if col in data[row][col_fam].keys():
                 if len(dic["data"][row][col_fam][col]) < col_fam_versions:
                     dic["data"][row][col_fam][col].append([value, utc_time])
                 else:
                     dic["data"][row][col_fam][col].append([value, utc_time])
-                    dic["data"][row][col_fam][col].remove(0)
+                    dic["data"][row][col_fam][col].pop(0)
                 print(f"Value added successfully to row {row}\n")
                 with open(file_path, "w") as file:
                     json.dump(dic, file, indent=2)
@@ -197,6 +216,11 @@ def alter(table_name, *args):
     if not (file_info := i_get_table(table_name)):
         return
     
+        
+    if is_enabled(table_name)==False:
+        print(f"- {table_name} is disabled, no actions allowed on this table")
+        return
+    
     dic, file_path = file_info
     info = dic["info"]
     file = open(file_path, "w")
@@ -209,6 +233,21 @@ def alter(table_name, *args):
         
     else:
         print("Column family not found")
+    
+def domany(table_name):
+    inp = " "
+    ops = []
+    if not (i_get_table(table_name)):
+        return
+    while inp:
+        inp = input(">>>>>> ")
+        arguments = inp.split(" ")
+        if inp:
+            ops.append(arguments)
+    print(" ")
+    for i in ops:
+        put(table_name, *i)
+        print(" ")
     
 def disable(table_name):
     i_toggle(table_name, "disabled")
@@ -256,6 +295,8 @@ def scan(table_name):
         for column_key in row.keys():
             print(f"\tColumn: {column_key} => Value: {row[column_key]}")
 
+
+
 def count(table_name):
     if not (memes := i_get_table(table_name)):
         return
@@ -263,20 +304,36 @@ def count(table_name):
     count = len(dic["data"])
     print(f"Table {table_name} has {count} rows")
 
+
 def truncate(table_name):
+    disable(table_name)
     if not (memes := i_get_table(table_name)):
         return
+    dic, file_path = memes
+    dic["data"] = {}
+    with open(file_path, "w") as file:
+        json.dump(dic, file, indent=2)
+    print(f"{table_name} has been truncated.")
+
+
+def retruncate(table_name):
+    disable(table_name)
+    if not (memes := i_get_table(table_name)):
+        return
+    if is_enabled(table_name)==False:
+        print(f"- {table_name} is disabled, no operations allowed on this table")
+        return
+    
     dic, file_path = memes
     with open(file_path, "r") as file:
         table_data = json.load(file)
     # Temp file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp_file:
-        json.dump(table_data, temp_file)
+        json.dump(table_data, temp_file, indent=2)
         temp_file.flush()
         temp_file_path = temp_file.name
     # Delete table json
     new_table_name = table_name
-    disable(table_name)
     os.remove(file_path)
     # Recreate table
     create(new_table_name, *dic["info"].keys())
@@ -284,34 +341,48 @@ def truncate(table_name):
     with open(temp_file_path, "r") as temp_file:
         temp_data = json.load(temp_file)
     with open(file_path, "w") as file:
-        json.dump(temp_data, file)
+        json.dump(temp_data, file, indent=2)
     # Delete temp file
     os.remove(temp_file_path)
+    enable(new_table_name)
     print(f"{table_name} has been truncated.")
 
-# delete <table_name> <Geoffrey> <personal>
+
+# delete <table_name> <Robert> <personal:pet> <timestamp>
 def delete(table_name, *args):
     num_args = len(args)
-    if num_args != 2:
-        print("Invalid arguments. Usage: delete <table_name> <row_key> <column>")
+    if num_args != 3:
+        print("Invalid arguments. Usage: delete <table_name> <row_key> <column_family>:<column_qualifier> <timestamp>")
     else:
         if not (memes := i_get_table(table_name)):
             return
+        
+        if is_enabled(table_name)==False:
+            print(f"- {table_name} is disabled, no actions allowed on this table")
+            return
+        
         dic, file_path = memes
         row_key = args[0]
-        column_cell = args[1:]
+        column_family, column_qualifier = args[1].split(":")
+        timestamp = args[2]
         if row_key not in dic["data"]:
             print("Row key not found")
             return
-        for cell in column_cell:
-            if cell not in dic["data"][row_key]:
-                print("Column cell not found")
-                return
-        for cell in column_cell:
-            del dic["data"][row_key][cell]
+        if column_family not in dic["data"][row_key]:
+            print("Column family not found")
+            return
+        if column_qualifier not in dic["data"][row_key][column_family]:
+            print("Column qualifier not found")
+            return
+        for idx, cell in enumerate(dic["data"][row_key][column_family][column_qualifier]):
+            
+            if cell:
+                if cell[1] == int(timestamp):
+                    del dic["data"][row_key][column_family][column_qualifier][idx]
         with open(file_path, "w") as file:
-            json.dump(dic, file)
+            json.dump(dic, file, indent=2)
             print("Deleted successfully")
+        
 
 
 # deleteall <table_name> <Geoffrey>
@@ -322,13 +393,18 @@ def deleteall(*args):
         table_name, row_key = args[:2]
         if not (memes := i_get_table(table_name)):
             return
+        
+        if is_enabled(table_name)==False:
+            print(f"- {table_name} is disabled, no actions allowed on this table")
+            return
+        
         dic, file_path = memes
         if row_key not in dic["data"]:
             print(f"Row key '{row_key}' not found in table '{table_name}'")
             return
         del dic["data"][row_key]
         with open(file_path, "w") as file:
-            json.dump(dic, file)
+            json.dump(dic, file, indent=2)
         print(
             f"All cells in row '{row_key}' of table '{table_name}' have been deleted.")
 
@@ -350,7 +426,9 @@ command_dict = {
     "deleteall": deleteall,
     "scan": scan,
     "count": count,
-    "truncate": truncate
+    "truncate": truncate,
+    "retruncate": retruncate,
+    "domany": domany
 
     # Para agregar una funcion solamente se agrega el nombre de la funcion y el nombre del comando
 }
@@ -400,6 +478,7 @@ def main():
             except TypeError:
                 print(f"Invalid arguments, type '{command}?' for more information ")
         else:
+            print(command)
             print("Command not found, type 'help' for a list of commands")
 
 
