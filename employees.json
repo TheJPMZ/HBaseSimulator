@@ -1,0 +1,62 @@
+{
+  "info": {
+    "personal": {
+      "VERSIONS": 2
+      },
+    "professional": {
+        "VERSIONS": 1
+      },
+    "_status": "enabled"
+  },
+  "data": {
+    "Geoffrey": {
+      "personal": {
+        "age": [[31, 1681614943],[30, 1681614942]],
+        "pet": [[]]
+      },
+      "professional": {
+        "department": [["sales", 1681614942]],
+        "salary": [[50000, 1681614942]]
+      }
+    },
+    "Jennifer": {
+      "personal": {
+        "age": [[25, 1681614942]],
+        "pet": [["cat", 1681614943],["dog", 1681614942]]
+      },
+      "professional": {
+        "department": [["sales", 1681614942]],
+        "salary": [[40000, 1681614942]]
+      }
+    },
+    "Michael": {
+      "personal": {
+        "age": [[45, 1681614942]]
+      },
+      "professional": {
+        "department": [["engineering", 1681614942]],
+        "salary": [[75000, 1681614942]]
+      }
+    },
+    "Samantha": {
+      "personal": {
+        "age": [[28, 1681614942]],
+        "pet": [["cat", 1681614942]]
+      },
+      "professional": {
+        "department": [["marketing", 1681614942]],
+        "salary": [[60000, 1681614942]]
+      }
+    },
+    "Robert": {
+      "personal": {
+        "age": [[35, 1681614942]],
+        "pet": [["hamster", 1681614942]]
+      },
+      "professional": {
+        "department": [["finance", 1681614942]],
+        "salary": [[80000, 1681614942]]
+      }
+    }
+  }
+}

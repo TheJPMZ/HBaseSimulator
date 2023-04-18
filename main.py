@@ -9,6 +9,8 @@ import datetime
 import calendar
 import tempfile
 
+columnas = []
+
 
 def i_get_table(table_name):
     file_path = os.path.join("database", table_name + ".json")
@@ -129,6 +131,10 @@ def put(table_name, *args):
     date = datetime.datetime.utcnow()
     utc_time = calendar.timegm(date.utctimetuple())
     
+    try:
+        value = float(value)
+    except:
+        value = value
 
     
     if not (file_info := i_get_table(table_name)):
@@ -136,25 +142,47 @@ def put(table_name, *args):
 
     dic, file_path = file_info
     data=dic["data"]
+    info = dic["info"]
+    
+    col_fam_versions = dic["info"][col_fam]["VERSIONS"]
+    
         
 
     
     if row in data.keys():
         if col_fam in data[row].keys():
             if col in data[row][col_fam].keys():
-                print(utc_time)
-                dic["data"][row][col_fam][col].append([int(value), utc_time])
+                if len(dic["data"][row][col_fam][col]) < col_fam_versions:
+                    dic["data"][row][col_fam][col].append([value, utc_time])
+                else:
+                    dic["data"][row][col_fam][col].append([value, utc_time])
+                    dic["data"][row][col_fam][col].remove(0)
                 print(f"Value added successfully to row {row}\n")
                 with open(file_path, "w") as file:
                     json.dump(dic, file, indent=2)
                 
             else:
-                print("Column not found")
+                dic["data"][row][col_fam][col] = [[value, utc_time]]
+                print(f"Column created {col}")
+                print(f"Value added successfully to row {row}\n")
+                with open(file_path, "w") as file:
+                    json.dump(dic, file, indent=2)
         else:
             print("Column family not found")
         
     else:
-        print("Row not found")
+        if col_fam in info.keys():
+            datos = {col_fam:
+                        {
+                            col: [[value, utc_time]]
+                        }
+                    }
+            dic["data"][row] = datos
+            with open(file_path, "w") as file:
+                json.dump(dic, file, indent=2)
+            print("New row created with values given")
+        else:
+            print("Column family not found")
         
 def alter(table_name, *args):
     vars = list(args)
