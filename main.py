@@ -8,6 +8,8 @@ import re
 import datetime
 import calendar
 import tempfile
+import names
+import random
 
 columnas = []
 
@@ -187,7 +189,21 @@ def put(table_name, *args):
                 with open(file_path, "w") as file:
                     json.dump(dic, file, indent=2)
         else:
-            print("Column family not found")
+            if col_fam in info.keys():
+                col_fam_versions = dic["info"][col_fam]["VERSIONS"]
+                datos = {
+                            col: [[value, utc_time]]
+                        }
+                
+                dic["data"][row][col_fam] = datos
+                with open(file_path, "w") as file:
+                    json.dump(dic, file, indent=2)
+                    
+                print(f"Value added successfully to row {row}\n")
+                    
+                
+            else:
+                print("Column family not found")
         
     else:
         if col_fam in info.keys():
@@ -205,6 +221,7 @@ def put(table_name, *args):
         
 def alter(table_name, *args):
     vars = list(args)
+    print(vars)
     vars = list(filter(lambda x: x!="=>", vars))[1:]
     col_name, prop, value = vars
     
@@ -483,4 +500,13 @@ def main():
 
 
 if __name__ == "__main__":
+    #for i in range(1000):
+    #    pet_name = ['dog', 'cat']
+    #    departamento = ['sales', 'hr', 'marketing', 'engineering']
+    #    name = names.get_first_name()
+    #    put(*f"employees2 {name} personal:age {random.randint(20,60)}".split(" "))
+    #    put(*f"employees2 {name} personal:pet {random.choice(pet_name)}".split(" "))
+    #    put(*f"employees2 {name} professional:department {random.choice(departamento)}".split(" "))
+    #    put(*f"employees2 {name} professional:salary {random.randint(20000, 100000)}".split(" "))
+        
     main()
